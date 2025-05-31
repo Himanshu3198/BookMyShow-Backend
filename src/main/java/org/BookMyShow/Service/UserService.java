@@ -11,21 +11,21 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
+
 
     public User createUser(User user){
         return userRepository.save(user);
     }
 
     public User getUserById(Long id){
-        return userRepository.findAllById(Collections.singleton(id))
+        return userRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("User not found with id:"+id));
     }
 
@@ -34,8 +34,14 @@ public class UserService {
     }
 
     public void deleteById(Long id){
-        userRepository.deleteById(id)
-                .orElseThrow(()->new ResourceNotFoundException("User not found with id:"+id));
+        if(!userRepository.existsById(id)){
+            throw new ResourceNotFoundException("User not found id: "+id);
+        }
+        userRepository.deleteById(id);
+
+    }
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("User not found with email:"+email));
     }
 
 }

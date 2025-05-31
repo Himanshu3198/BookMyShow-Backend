@@ -25,8 +25,8 @@ public class UserController {
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
-        user.setPhone(user.getEmail());
-        user.setPassword(user.getPassword());
+        user.setPhone(userDTO.getPhone());
+        user.setPassword(userDTO.getPassword());
 
         User saved = userService.createUser(user);
         return ResponseEntity.ok(toDTO(saved));
@@ -38,8 +38,13 @@ public class UserController {
         return ResponseEntity.ok(toDTO(user));
 
     }
+    @GetMapping("/email")
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email){
+        User user = userService.getUserByEmail(email);
+        return ResponseEntity.ok(toDTO(user));
+    }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAllUser(){
         List<UserDTO> users = userService.getAllUser()
                 .stream().map(this::toDTO).collect(Collectors.toList());
@@ -49,6 +54,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         userService.deleteById(id);
+
         return ResponseEntity.ok("User deleted successfully");
     }
 
