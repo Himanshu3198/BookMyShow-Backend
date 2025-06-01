@@ -26,6 +26,10 @@ public class Show {
     @JoinColumn(name="seat_id",nullable = false)
     private List<Seat> seats = new ArrayList<>();
 
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name="theater_id",nullable = false)
+    private Theater theater;
+
     public void addSeat(Seat seat){
         seat.setShow(this);
         this.seats.add(seat);
@@ -33,6 +37,10 @@ public class Show {
 
     public Seat getSeatByNumber(String seatNumber){
         return seats.stream().filter(seat -> seat.getSeatNumber().equals(seatNumber)).findFirst().orElse(null);
+    }
+
+    public void setTheater(Theater theater){
+        this.theater = theater;
     }
 
 
