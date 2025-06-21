@@ -22,14 +22,14 @@ public class Theater {
     private String location;
 
     @OneToMany(mappedBy = "theater",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
-    List<Show> showList = new ArrayList<>();
+    List<MovieShow> showList = new ArrayList<>();
 
-    public void addShow(Show show){
+    public void addShow(MovieShow show){
         showList.add(show);
         show.setTheater(this);
     }
 
-    public void removeShow(Show show){
+    public void removeShow(MovieShow show){
         showList.remove(show);
         show.setTheater(this);
     }

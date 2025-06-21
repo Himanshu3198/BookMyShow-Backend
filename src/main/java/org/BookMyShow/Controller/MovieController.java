@@ -1,6 +1,7 @@
 package org.BookMyShow.Controller;
 
 
+import jakarta.validation.Valid;
 import org.BookMyShow.Dto.Request.MovieDTO;
 import org.BookMyShow.Dto.Response.MovieResponseDTO;
 import org.BookMyShow.Entity.Movie;
@@ -11,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/movies/")
@@ -24,7 +27,7 @@ public class MovieController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MovieResponseDTO> createMovie(MovieDTO movieDTO){
+    public ResponseEntity<MovieResponseDTO> createMovie(@Valid @RequestBody MovieDTO movieDTO){
 
         Movie movie = MovieMapper.toEntity(movieDTO);
         movieService.addMovie(movie);
@@ -37,8 +40,12 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(MovieMapper.toDTO(movie));
     }
 
-//    @GetMapping("/all")
-//    public ResponseEntity<List<MovieResponseDTO>> getAllMovies(){
-//        List<MovieResponseDTO>  = movieService.getAllMovies();
-//    }
+    @GetMapping("/all")
+    public ResponseEntity<List<MovieResponseDTO>> getAllMovies(){
+        List<MovieResponseDTO> responseDTOList= movieService.getAllMovies()
+                .stream().
+                map(MovieMapper::toDTO).
+                toList();
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTOList);
+    }
 }

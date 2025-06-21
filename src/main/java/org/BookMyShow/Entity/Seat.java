@@ -1,8 +1,6 @@
 package org.BookMyShow.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.BookMyShow.Enum.Status;
 
 @Entity
@@ -14,7 +12,6 @@ public class Seat {
     private Long id;
 
    @Column(name="seat_number", nullable = false, unique = true)
-   @Getter
     private String seatNumber;
 
    @Enumerated(EnumType.STRING)
@@ -23,7 +20,7 @@ public class Seat {
 
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name="show_id",nullable = false)
-    private Show show;
+    private MovieShow show;
 
 //   Getter and Setter
 
@@ -45,7 +42,7 @@ public class Seat {
         this.status = status;
     }
 
-    public void setShow(Show show) {
+    public void setShow(MovieShow show) {
         this.show = show;
     }
 }

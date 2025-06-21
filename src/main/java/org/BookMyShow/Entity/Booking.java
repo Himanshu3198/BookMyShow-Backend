@@ -18,7 +18,7 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "show_id", nullable = false)
-    private Show show;
+    private MovieShow show;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -28,14 +28,14 @@ public class Booking {
     @JsonProperty(value = "amount")
     private Double amount;
 
-    public Booking(String seatNumber, User user, Show show, Double amount) {
+    public Booking(String seatNumber, User user, MovieShow show, Double amount) {
         this.seatNumber = seatNumber;
         this.user = user;
         this.show = show;
         this.amount = amount;
     }
 
-    public Show getShow() {
+    public MovieShow getShow() {
         return show;
     }
 

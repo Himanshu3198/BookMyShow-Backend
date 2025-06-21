@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "show")
-public class Show {
+@Table(name = "movie_show")
+public class MovieShow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,6 @@ public class Show {
     private Movie movie;
 
     @OneToMany(mappedBy = "show",cascade = CascadeType.ALL,orphanRemoval = true)
-    @JoinColumn(name="seat_id",nullable = false)
     private List<Seat> seats = new ArrayList<>();
 
     @ManyToOne(fetch= FetchType.LAZY)
@@ -42,9 +41,5 @@ public class Show {
     public void setTheater(Theater theater){
         this.theater = theater;
     }
-
-
-
-
 
 }
