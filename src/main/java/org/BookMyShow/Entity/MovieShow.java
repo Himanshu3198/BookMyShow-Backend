@@ -38,8 +38,20 @@ public class MovieShow {
         return seats.stream().filter(seat -> seat.getSeatNumber().equals(seatNumber)).findFirst().orElse(null);
     }
 
+    public String getShowTime(){
+        return this.showTime;
+    }
+
+
     public void setTheater(Theater theater){
         this.theater = theater;
+    }
+    public void setShowTime(String showTime){
+        this.showTime = showTime;
+    }
+
+    public void setMovie(Movie movie){
+        this.movie = movie;
     }
 
 }

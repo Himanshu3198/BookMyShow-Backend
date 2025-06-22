@@ -33,4 +33,24 @@ public class Theater {
         showList.remove(show);
         show.setTheater(this);
     }
+
+    public String getTheaterName() {
+        return theaterName;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
+    public void setTheaterName(String theaterName) {
+        this.theaterName = theaterName;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }
