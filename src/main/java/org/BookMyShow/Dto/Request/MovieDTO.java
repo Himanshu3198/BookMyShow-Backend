@@ -8,9 +8,11 @@ public record MovieDTO (
 
     @NotBlank(message ="movie title cannot be blank")
     @JsonProperty(value = "title")
+    @NotNull(message = "Movie cannot be null")
     String title,
+    @NotNull(message = "Genre cannot be null")
     String genre,
-    @NotNull(message = "cast cannot be null")
+    @NotNull(message = "Cast cannot be null")
     String cast
 
 ){}

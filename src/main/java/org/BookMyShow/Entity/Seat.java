@@ -4,27 +4,30 @@ import jakarta.persistence.*;
 import org.BookMyShow.Enum.Status;
 
 @Entity
-@Table(name="seats")
+@Table(name = "seats")
 public class Seat {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   @Column(name="seat_number", nullable = false, unique = true)
+    @Column(name = "seat_number", nullable = false)
     private String seatNumber;
 
-   @Enumerated(EnumType.STRING)
-   @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
 
-   @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name="show_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "show_id", nullable = false)
     private MovieShow show;
 
-//   Getter and Setter
+    public Seat() {
+    }
 
-
+    public Long getId() {
+        return id;
+    }
 
     public String getSeatNumber() {
         return seatNumber;
@@ -34,6 +37,11 @@ public class Seat {
         return status;
     }
 
+    public MovieShow getShow() {
+        return show;
+    }
+
+    //
     public void setSeatNumber(String seatNumber) {
         this.seatNumber = seatNumber;
     }

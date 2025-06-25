@@ -1,5 +1,8 @@
 package org.BookMyShow.Service;
 
+import jakarta.transaction.Transactional;
+import org.BookMyShow.Dto.Request.MovieShowDTO;
+import org.BookMyShow.Dto.Request.SeatDTO;
 import org.BookMyShow.Dto.Request.TheaterDTO;
 import org.BookMyShow.Entity.Movie;
 import org.BookMyShow.Entity.MovieShow;
@@ -17,50 +20,64 @@ public class TheaterService {
     private final TheaterRepository theaterRepository;
     private final MovieService movieService;
 
-    public TheaterService(TheaterRepository theaterRepository,MovieService movieService){
-
+    public TheaterService(TheaterRepository theaterRepository, MovieService movieService) {
         this.theaterRepository = theaterRepository;
         this.movieService = movieService;
     }
 
-    public Theater addTheater(TheaterDTO theaterDTO){
+    @Transactional
+    public Theater addTheater(TheaterDTO theaterDTO) {
+        if (theaterDTO.shows() == null || theaterDTO.shows().isEmpty()) {
+            throw new IllegalArgumentException("At least one show is required.");
+        }
 
         Theater theater = new Theater();
         theater.setTheaterName(theaterDTO.theaterName());
-        theater.setLocation(theater.getLocation());
+        theater.setLocation(theaterDTO.location());
 
-        for(var showDTO:theaterDTO.shows()){
-
-            MovieShow movieShow = new MovieShow();
-            movieShow.setShowTime(showDTO.showTime());
-            Movie newMovie = movieService.getMovieById(showDTO.movieId());
-            movieShow.setMovie(newMovie);
-
-
-            for(var seatDTO:showDTO.seats()){
-                Seat newSeat = new Seat();
-                newSeat.setSeatNumber(seatDTO.seatNumber());
-                newSeat.setStatus(seatDTO.status());
-                movieShow.addSeat(newSeat);
-            }
-            theater.addShow(movieShow);
+        for (MovieShowDTO showDTO : theaterDTO.shows()) {
+            theater.addShow(buildMovieShow(showDTO));
         }
-      return theaterRepository.save(theater);
 
+        return theaterRepository.save(theater);
     }
 
-    public Theater getTheaterById(Long id){
+    private MovieShow buildMovieShow(MovieShowDTO showDTO) {
+        MovieShow movieShow = new MovieShow();
+        movieShow.setShowTime(showDTO.showTime());
+
+        Movie movie = movieService.getMovieById(showDTO.movieId());
+        movieShow.setMovie(movie);
+
+        if (showDTO.seats() == null || showDTO.seats().isEmpty()) {
+            throw new IllegalArgumentException("Each show must contain at least one seat.");
+        }
+
+        for (SeatDTO seatDTO : showDTO.seats()) {
+            if (seatDTO.status() == null || seatDTO.seatNumber() == null || seatDTO.seatNumber().isBlank()) {
+                throw new IllegalArgumentException("Each seat must have a valid number and status.");
+            }
+
+            Seat seat = new Seat();
+            seat.setSeatNumber(seatDTO.seatNumber());
+            seat.setStatus(seatDTO.status());
+            movieShow.addSeat(seat);
+        }
+
+        return movieShow;
+    }
+
+    public Theater getTheaterById(Long id) {
         return theaterRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Theater not found with id:"+id));
+                .orElseThrow(() -> new ResourceNotFoundException("Theater not found with id: " + id));
     }
 
-    public List<Theater> getAllTheater(){
+    public List<Theater> getAllTheater() {
         return theaterRepository.findAll();
     }
 
-    public void deleteTheaterById(Long id){
-        if(!theaterRepository.existsById(id)){
-            throw new ResourceNotFoundException("Theater not found with id:"+id);
-        }
+    public void deleteTheaterById(Long id) {
+        Theater theater = getTheaterById(id); // Reuse existing method
+        theaterRepository.delete(theater);
     }
 }

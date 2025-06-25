@@ -1,6 +1,6 @@
 package org.BookMyShow.Enum;
 
-public enum Booking {
+public enum BookingStatus {
     PENDING,
     CONFIRMED,
     CANCELLED

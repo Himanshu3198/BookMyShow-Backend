@@ -2,16 +2,21 @@ package org.BookMyShow.Dto.Request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record TheaterDTO (
+public record TheaterDTO(
 
-        @NotBlank(message = "theater name cannot be blank")
-        @JsonProperty(value = "theaterName")
+        @NotBlank(message = "Theater name cannot be blank")
+        @JsonProperty("theaterName")
         String theaterName,
-        @NotBlank(message = "location cannot be blank")
-        @JsonProperty(value = "location")
+
+        @NotBlank(message = "Location cannot be blank")
+        @JsonProperty("location")
         String location,
-        List<MovieShowDTO> shows
-){}
+
+        @NotNull(message = "Shows list cannot be null")
+        List<@NotNull MovieShowDTO> shows
+
+) {}

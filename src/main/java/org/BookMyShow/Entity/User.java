@@ -1,17 +1,8 @@
 package org.BookMyShow.Entity;
 import jakarta.persistence.*;
-import lombok.*;
-
-import javax.annotation.processing.Generated;
-
 
 @Entity
 @Table(name="users")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
 public class User {
 
     @Id
@@ -29,6 +20,9 @@ public class User {
 
     @Column(name = "user_password")
     private String password;
+
+    @Column(name = "wallet_balance")
+    private Double walletBalance;
 
 
     public Long getId() {
@@ -69,5 +63,12 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setWalletBalance(Double balance){
+        this.walletBalance = balance;
+    }
+    public Double getWalletBalance(){
+        return walletBalance;
     }
 }
