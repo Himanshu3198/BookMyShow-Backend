@@ -1,8 +1,6 @@
 package org.BookMyShow.Enum;
 
-public enum Status {
-    AVAILABLE,
-    BOOKED,
+public enum PaymentStatus {
     SUCCESS,
     FAILED
 }

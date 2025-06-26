@@ -36,8 +36,8 @@ public class BookingHistory {
     private BookingStatus bookingStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status")
-    private PaymentType paymentStatus;
+    @Column(name = "payment_type")
+    private PaymentType paymentType;
 
     @Column(name = "booking_time", nullable = false)
     private LocalDateTime bookingTime;
@@ -73,8 +73,8 @@ public class BookingHistory {
         return bookingStatus;
     }
 
-    public PaymentType getPaymentStatus() {
-        return paymentStatus;
+    public PaymentType getpaymentType() {
+        return paymentType;
     }
 
     public LocalDateTime getBookingTime() {
@@ -111,8 +111,8 @@ public class BookingHistory {
         return this;
     }
 
-    public BookingHistory setPaymentStatus(PaymentType paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public BookingHistory setpaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
         return this;
     }
 

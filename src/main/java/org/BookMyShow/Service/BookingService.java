@@ -4,15 +4,15 @@ import jakarta.transaction.Transactional;
 import org.BookMyShow.Entity.*;
 import org.BookMyShow.Enum.BookingStatus;
 import org.BookMyShow.Enum.PaymentType;
-import org.BookMyShow.Enum.Status;
+import org.BookMyShow.Enum.SeatStatus;
 import org.BookMyShow.Exception.BookingFailedException;
 import org.BookMyShow.Exception.PaymentFailedException;
 import org.BookMyShow.Exception.SeatAlreadyBookedException;
-import org.BookMyShow.PaymentStrategy.CardPaymentImp;
+import org.BookMyShow.Model.BookingModel;
 import org.BookMyShow.PaymentStrategy.PaymentStrategy;
+import org.BookMyShow.PaymentStrategy.UpiPaymentImp;
 import org.BookMyShow.Repository.BookingRepository;
 import org.BookMyShow.Repository.SeatRepository;
-import org.BookMyShow.Repository.ShowRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -43,28 +43,29 @@ public class BookingService {
     }
 
     @Transactional
-    public void placeBooking(String seatNumber, Long userId, Long showId, Double amount, PaymentStrategy paymentStrategy) {
+    public void placeBooking(BookingModel booking) {
 
         try {
-            User user = userService.getUserById(userId);
-            MovieShow show = showService.getShowById(showId);
-            Seat seat = show.getSeatByNumber(seatNumber);
-            if (seat.getStatus() == Status.BOOKED) {
-                throw new SeatAlreadyBookedException("Seat is not available: " + seatNumber);
+            User user = userService.getUserById(booking.userId());
+            MovieShow show = showService.getShowById(booking.showId());
+            Seat seat = show.getSeatByNumber(booking.seatNumber());
+            if (seat.getStatus() == SeatStatus.BOOKED) {
+                throw new SeatAlreadyBookedException("Seat is not available: " + booking.seatNumber());
             }
             String bookingId = UUID.randomUUID().toString().substring(0, 8);
-            Boolean paymentSuccess = paymentService.processPayment(bookingId, amount, user, new CardPaymentImp());
+            Boolean paymentSuccess = paymentService.processPayment(bookingId, booking.amount(), user, new UpiPaymentImp());
 
             if (!paymentSuccess) {
                 throw new PaymentFailedException("Payment got failed for booking: " + bookingId);
             }
-            seat.setStatus(Status.BOOKED);
+            seat.setStatus(SeatStatus.BOOKED);
             seatRepository.save(seat);
-            bookingHistoryService.addBookingHistory(bookingId,
-                    userId,
-                    showId,
-                    seatNumber,
-                    amount,
+            bookingHistoryService.addBookingHistory(
+                    bookingId,
+                    booking.userId(),
+                    booking.showId(),
+                    booking.seatNumber(),
+                    booking.amount(),
                     BookingStatus.CONFIRMED,
                     PaymentType.UPI);
 
@@ -83,8 +84,8 @@ public class BookingService {
         MovieShow movieShow = bookingRecord.getShow();
         Seat seat = movieShow.getSeatByNumber(bookingRecord.getSeatNumber());
 
-        if(seat.getStatus() == Status.BOOKED){
-            seat.setStatus(Status.AVAILABLE);
+        if(seat.getStatus() == SeatStatus.BOOKED){
+            seat.setStatus(SeatStatus.AVAILABLE);
         }
         Double amount = bookingRecord.getAmount();
         User user = bookingRecord.getUser();

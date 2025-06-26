@@ -1,7 +1,7 @@
 package org.BookMyShow.Entity;
 
 import jakarta.persistence.*;
-import org.BookMyShow.Enum.Status;
+import org.BookMyShow.Enum.SeatStatus;
 
 @Entity
 @Table(name = "seats")
@@ -16,7 +16,7 @@ public class Seat {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private SeatStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "show_id", nullable = false)
@@ -33,7 +33,7 @@ public class Seat {
         return seatNumber;
     }
 
-    public Status getStatus() {
+    public SeatStatus getStatus() {
         return status;
     }
 
@@ -46,7 +46,7 @@ public class Seat {
         this.seatNumber = seatNumber;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(SeatStatus status) {
         this.status = status;
     }
 

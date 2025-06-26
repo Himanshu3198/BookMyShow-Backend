@@ -13,7 +13,6 @@ import org.BookMyShow.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookingHistoryService {
@@ -29,7 +28,7 @@ public class BookingHistoryService {
     }
 
     @Transactional
-    public BookingHistory addBookingHistory(String bookingId, Long userId, Long showId, String seatNumber, Double amount, BookingStatus bookingStatus, PaymentType paymentStatus){
+    public void addBookingHistory(String bookingId, Long userId, Long showId, String seatNumber, Double amount, BookingStatus bookingStatus, PaymentType paymentType){
 
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new ResourceNotFoundException("User not found with Id: "+userId));
@@ -41,14 +40,14 @@ public class BookingHistoryService {
                 .setUser(user)
                 .setShow(movieShow)
                 .setAmount(amount)
-                .setPaymentStatus(paymentStatus)
+                .setpaymentType(paymentType)
                 .setSeatNumber(seatNumber);
-        return bookingHistoryRepository.save(bookingHistory);
+        bookingHistoryRepository.save(bookingHistory);
 
     }
     @Transactional
-    public BookingHistory updateBookingHistory(BookingHistory bookingHistory){
-        return bookingHistoryRepository.save(bookingHistory);
+    public void updateBookingHistory(BookingHistory bookingHistory){
+        bookingHistoryRepository.save(bookingHistory);
     }
     public List<BookingHistory> getHistoryForUser(Long userId){
         return bookingHistoryRepository.findByUserId(userId);

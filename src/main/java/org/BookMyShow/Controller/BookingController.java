@@ -1,6 +1,8 @@
 package org.BookMyShow.Controller;
 
 
+import org.BookMyShow.Dto.Request.BookingRequestDTO;
+import org.BookMyShow.Dto.Response.BookingResponseDTO;
 import org.BookMyShow.Service.BookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,5 +20,8 @@ public class BookingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BookingResponseDTO>
+    public ResponseEntity<BookingResponseDTO>createBooking(BookingRequestDTO bookingRequestDTO){
+
+
+    }
 }
