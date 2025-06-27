@@ -7,9 +7,9 @@ import org.BookMyShow.Enum.PaymentType;
 import org.BookMyShow.Enum.SeatStatus;
 import org.BookMyShow.Exception.BookingFailedException;
 import org.BookMyShow.Exception.PaymentFailedException;
+import org.BookMyShow.Exception.ResourceNotFoundException;
 import org.BookMyShow.Exception.SeatAlreadyBookedException;
 import org.BookMyShow.Model.BookingModel;
-import org.BookMyShow.PaymentStrategy.PaymentStrategy;
 import org.BookMyShow.PaymentStrategy.UpiPaymentImp;
 import org.BookMyShow.Repository.BookingRepository;
 import org.BookMyShow.Repository.SeatRepository;
@@ -17,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,7 +44,7 @@ public class BookingService {
     }
 
     @Transactional
-    public void placeBooking(BookingModel booking) {
+    public BookingHistory placeBooking(BookingModel booking) {
 
         try {
             User user = userService.getUserById(booking.userId());
@@ -60,7 +61,7 @@ public class BookingService {
             }
             seat.setStatus(SeatStatus.BOOKED);
             seatRepository.save(seat);
-            bookingHistoryService.addBookingHistory(
+            return bookingHistoryService.addBookingHistory(
                     bookingId,
                     booking.userId(),
                     booking.showId(),
@@ -72,27 +73,47 @@ public class BookingService {
 
         } catch (BookingFailedException e) {
             throw new BookingFailedException("Booking has been failed for bookingId");
-        }catch (DataAccessException dae){
-            throw new RuntimeException("Database error occurred during booking:"+dae.getMessage(),dae);
+        } catch (DataAccessException dae) {
+            throw new RuntimeException("Database error occurred during booking:" + dae.getMessage(), dae);
         }
     }
 
     @Transactional
-    public void cancelBooking(String bookingId){
+    public BookingHistory cancelBooking(String bookingId) {
 
-        BookingHistory bookingRecord = bookingHistoryService.getHistoryByBookingId(bookingId);
-        MovieShow movieShow = bookingRecord.getShow();
-        Seat seat = movieShow.getSeatByNumber(bookingRecord.getSeatNumber());
+        try{
+            BookingHistory bookingRecord = bookingHistoryService.getHistoryByBookingId(bookingId);
+            MovieShow movieShow = bookingRecord.getShow();
+            Seat seat = movieShow.getSeatByNumber(bookingRecord.getSeatNumber());
 
-        if(seat.getStatus() == SeatStatus.BOOKED){
-            seat.setStatus(SeatStatus.AVAILABLE);
+            if (seat.getStatus() == SeatStatus.BOOKED) {
+                seat.setStatus(SeatStatus.AVAILABLE);
+            }
+            Double amount = bookingRecord.getAmount();
+            User user = bookingRecord.getUser();
+            user.setWalletBalance(user.getWalletBalance() + amount);
+            bookingRecord.setBookingStatus(BookingStatus.CANCELLED);
+            bookingRecord.setBookingTime(LocalDateTime.now());
+            return bookingHistoryService.updateBookingHistory(bookingRecord);
+        }catch (ResourceNotFoundException e){
+            throw new ResourceNotFoundException("Booking not found with id: "+bookingId);
+        }catch (DataAccessException dae){
+            throw new RuntimeException("Database error occurred during booking:" + dae.getMessage(), dae);
+
         }
-        Double amount = bookingRecord.getAmount();
-        User user = bookingRecord.getUser();
-        user.setWalletBalance(user.getWalletBalance()+amount);
-        bookingRecord.setBookingStatus(BookingStatus.CANCELLED);
-        bookingRecord.setBookingTime(LocalDateTime.now());
-        bookingHistoryService.updateBookingHistory(bookingRecord);
 
+
+    }
+
+
+    public List<BookingHistory> getAllBookingsForUser(Long userId){
+        try{
+            return bookingHistoryService.getHistoryForUser(userId);
+        }catch (ResourceNotFoundException e){
+            throw new ResourceNotFoundException("Bookings not found for id: "+userId);
+        }catch (DataAccessException dae){
+            throw new RuntimeException("Database error occurred during booking:" + dae.getMessage(), dae);
+
+        }
     }
 }

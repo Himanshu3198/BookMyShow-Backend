@@ -28,7 +28,7 @@ public class BookingHistoryService {
     }
 
     @Transactional
-    public void addBookingHistory(String bookingId, Long userId, Long showId, String seatNumber, Double amount, BookingStatus bookingStatus, PaymentType paymentType){
+    public BookingHistory addBookingHistory(String bookingId, Long userId, Long showId, String seatNumber, Double amount, BookingStatus bookingStatus, PaymentType paymentType){
 
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new ResourceNotFoundException("User not found with Id: "+userId));
@@ -42,12 +42,12 @@ public class BookingHistoryService {
                 .setAmount(amount)
                 .setpaymentType(paymentType)
                 .setSeatNumber(seatNumber);
-        bookingHistoryRepository.save(bookingHistory);
+      return   bookingHistoryRepository.save(bookingHistory);
 
     }
     @Transactional
-    public void updateBookingHistory(BookingHistory bookingHistory){
-        bookingHistoryRepository.save(bookingHistory);
+    public BookingHistory updateBookingHistory(BookingHistory bookingHistory){
+        return  bookingHistoryRepository.save(bookingHistory);
     }
     public List<BookingHistory> getHistoryForUser(Long userId){
         return bookingHistoryRepository.findByUserId(userId);
@@ -58,4 +58,6 @@ public class BookingHistoryService {
         return bookingHistoryRepository.findByBookingId(bookingId)
                 .orElseThrow(()->new ResourceNotFoundException("Booking not found with id: "+bookingId));
     }
+
+
 }

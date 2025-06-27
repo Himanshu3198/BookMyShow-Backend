@@ -8,27 +8,35 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex){
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+  public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex){
+    ErrorResponse response = new ErrorResponse("RESOURCE_NOT_FOUND","CANNOT FOUND RESOURCE",ex.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 
   @ExceptionHandler(SeatAlreadyBookedException.class)
-  public ResponseEntity<String> handleSeatBooked(SeatAlreadyBookedException ex) {
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+  public ResponseEntity<ErrorResponse> handleSeatBooked(SeatAlreadyBookedException ex) {
+    ErrorResponse response = new ErrorResponse("SEAT_NOT_AVAILABLE","THIS SEAT IS NOT AVAILABLE",ex.getMessage());
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
   }
 
   @ExceptionHandler(PaymentFailedException.class)
-  public ResponseEntity<String> handlePaymentFailed(PaymentFailedException ex){
-    return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(ex.getMessage());
+  public ResponseEntity<ErrorResponse> handlePaymentFailed(PaymentFailedException ex){
+    ErrorResponse response = new ErrorResponse("PAYMENT_FAILED","PAYMENT COUNT NOT PROCESSED",ex.getMessage());
+    return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(response);
   }
 
   @ExceptionHandler(BookingFailedException.class)
-  public ResponseEntity<String> handleBooking(BookingFailedException ex){
-    return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ex.getMessage());
+  public ResponseEntity<ErrorResponse> handleBooking(BookingFailedException ex){
+    ErrorResponse response = new ErrorResponse("BOOKING_FAILED","BOOKING FAILED FOR THIS SEAT",ex.getMessage());
+
+    return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(response);
   }
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<String> handleGeneric(Exception ex){
+    ErrorResponse response = new ErrorResponse("SERVER ERROR","SOMETHING WHET WRONG",ex.getMessage());
+
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong"+ex.getMessage());
   }
 
