@@ -17,4 +17,5 @@ public record MovieResponseDTO(
       @JsonProperty(value = "genre")
       String genre
 
+
 ){}

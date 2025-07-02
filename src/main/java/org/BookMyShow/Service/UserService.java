@@ -1,13 +1,9 @@
 package org.BookMyShow.Service;
-
-import lombok.RequiredArgsConstructor;
 import org.BookMyShow.Entity.User;
 import org.BookMyShow.Exception.ResourceNotFoundException;
 import org.BookMyShow.Repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service

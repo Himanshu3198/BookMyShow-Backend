@@ -27,6 +27,7 @@ public class UserController {
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
         user.setPassword(userDTO.getPassword());
+        user.setWalletBalance(0.0);
 
         User saved = userService.createUser(user);
         return ResponseEntity.ok(toDTO(saved));

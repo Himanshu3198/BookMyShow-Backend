@@ -21,8 +21,8 @@ public class User {
     @Column(name = "user_password")
     private String password;
 
-    @Column(name = "wallet_balance")
-    private Double walletBalance;
+    @Column(name = "wallet_balance", nullable = false)
+    private Double walletBalance = 0.0;
 
 
     public Long getId() {
