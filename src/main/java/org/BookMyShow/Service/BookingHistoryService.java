@@ -12,6 +12,7 @@ import org.BookMyShow.Repository.ShowRepository;
 import org.BookMyShow.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,12 +42,14 @@ public class BookingHistoryService {
                 .setShow(movieShow)
                 .setAmount(amount)
                 .setpaymentType(paymentType)
-                .setSeatNumber(seatNumber);
+                .setSeatNumber(seatNumber)
+                .setBookingTime(LocalDateTime.now());
       return   bookingHistoryRepository.save(bookingHistory);
 
     }
     @Transactional
     public BookingHistory updateBookingHistory(BookingHistory bookingHistory){
+        bookingHistory.setBookingTime(LocalDateTime.now());
         return  bookingHistoryRepository.save(bookingHistory);
     }
     public List<BookingHistory> getHistoryForUser(Long userId){

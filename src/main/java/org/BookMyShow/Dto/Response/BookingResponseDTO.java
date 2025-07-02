@@ -9,19 +9,12 @@ import java.time.LocalDateTime;
 
 public record BookingResponseDTO (
 
-        @JsonProperty(value = "bookingId")
-        String bookingId,
-        @JsonProperty(value = "userId")
-        Long userId,
-        @JsonProperty(value = "movieShow")
-        MovieShow movieShow,
-        @JsonProperty(value = "amount")
-        Double amount,
-        @JsonProperty(value = "bookingStatus")
-        BookingStatus bookingStatus,
-        @JsonProperty(value = "paymentType")
-        PaymentType paymentType,
-        @JsonProperty(value = "bookingTime")
-        LocalDateTime bookingTime
+        @JsonProperty("bookingId") String bookingId,
+        @JsonProperty("userId") Long userId,
+        @JsonProperty("movieShow") MovieShowResponseDTO movieShow,
+        @JsonProperty("amount") Double amount,
+        @JsonProperty("bookingStatus") BookingStatus bookingStatus,
+        @JsonProperty("paymentType") PaymentType paymentType,
+        @JsonProperty("bookingTime") LocalDateTime bookingTime
 
 ) {}

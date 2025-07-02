@@ -14,14 +14,16 @@ public class BookingMapper {
                 bookingRequestDTO.amount());
     }
 
-    public static BookingResponseDTO toDTO(BookingHistory bookingHistory){
-        return new BookingResponseDTO(bookingHistory.getBookingId(),
-                bookingHistory.getUser().getId(),
-                bookingHistory.getShow(),
-                bookingHistory.getAmount(),
-                bookingHistory.getBookingStatus(),
-                bookingHistory.getpaymentType(),
-                bookingHistory.getBookingTime());
+    public static BookingResponseDTO toDTO(BookingHistory booking){
+        return new BookingResponseDTO(
+                booking.getBookingId(),
+                booking.getUser().getId(),
+                MovieShowMapper.toDTO(booking.getShow()),
+                booking.getAmount(),
+                booking.getBookingStatus(),
+                booking.getpaymentType(),
+                booking.getBookingTime()
+        );
     }
 }
 

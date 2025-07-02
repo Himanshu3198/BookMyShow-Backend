@@ -3,6 +3,7 @@ package org.BookMyShow.Entity;
 import jakarta.persistence.*;
 import org.BookMyShow.Enum.BookingStatus;
 import org.BookMyShow.Enum.PaymentType;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -39,6 +40,7 @@ public class BookingHistory {
     @Column(name = "payment_type")
     private PaymentType paymentType;
 
+    @CreationTimestamp
     @Column(name = "booking_time", nullable = false)
     private LocalDateTime bookingTime;
 
