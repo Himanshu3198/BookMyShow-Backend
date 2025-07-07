@@ -3,7 +3,9 @@ package org.BookMyShow.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,14 @@ public class MovieShow {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_id", nullable = false)
     private Theater theater;
+
+//    @Column(name = "start_time")
+//    @DateTimeFormat
+//    private LocalDateTime startTime;
+//
+//    @Column(name = "end_time")
+//    @DateTimeFormat
+//    private LocalDateTime endTime;
 
     public MovieShow() {}
 

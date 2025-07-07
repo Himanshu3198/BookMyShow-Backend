@@ -6,24 +6,40 @@ plugins {
 
 group = 'com.bookmyshow'
 version = '1.0.0'
-sourceCompatibility = '17' // or 21 if you're using Java 21
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Dev tools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Spring Boot Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    // ✅ Cucumber + JUnit 4
+    testImplementation 'io.cucumber:cucumber-java:7.14.0'
+    testImplementation 'io.cucumber:cucumber-junit:7.14.0'
+    testImplementation 'junit:junit:4.13.2'
+
+    // ✅ RestAssured
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+    testImplementation 'io.rest-assured:json-path:5.4.0'
+
+    // ✅ Jackson
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+// ✅ Tell Gradle to use JUnit 4 (for Cuc
