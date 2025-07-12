@@ -32,13 +32,13 @@ public class MovieShow {
     @JoinColumn(name = "theater_id", nullable = false)
     private Theater theater;
 
-//    @Column(name = "start_time")
-//    @DateTimeFormat
-//    private LocalDateTime startTime;
-//
-//    @Column(name = "end_time")
-//    @DateTimeFormat
-//    private LocalDateTime endTime;
+    @Column(name = "start_time")
+    @DateTimeFormat
+    private LocalDateTime startTime;
+
+    @Column(name = "end_time")
+    @DateTimeFormat
+    private LocalDateTime endTime;
 
     public MovieShow() {}
 
@@ -76,6 +76,10 @@ public class MovieShow {
         return theater;
     }
 
+    public LocalDateTime getStartTime(){return startTime;}
+
+    public LocalDateTime getEndTime() {return endTime;}
+
     //  Setters
     public void setShowTime(String showTime) {
         this.showTime = showTime;
@@ -87,5 +91,13 @@ public class MovieShow {
 
     public void setTheater(Theater theater) {
         this.theater = theater;
+    }
+
+    public void setStartTime(LocalDateTime startTime){
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime){
+        this.endTime = endTime;
     }
 }

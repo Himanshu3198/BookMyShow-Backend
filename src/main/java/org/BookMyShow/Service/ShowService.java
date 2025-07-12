@@ -1,7 +1,9 @@
 package org.BookMyShow.Service;
 
+import jakarta.transaction.Transactional;
 import org.BookMyShow.Entity.MovieShow;
 import org.BookMyShow.Entity.Seat;
+import org.BookMyShow.Enum.SeatStatus;
 import org.BookMyShow.Exception.ResourceNotFoundException;
 import org.BookMyShow.Repository.SeatRepository;
 import org.BookMyShow.Repository.ShowRepository;
@@ -9,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,8 +20,10 @@ public class ShowService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShowService.class);
 
     private final ShowRepository showRepository;
+    private final SeatRepository seatRepository;
 
-    public ShowService(ShowRepository showRepository) {
+    public ShowService(ShowRepository showRepository, SeatRepository seatRepository) {
+        this.seatRepository = seatRepository;
         this.showRepository = showRepository;
     }
 
@@ -40,6 +45,7 @@ public class ShowService {
     public Seat getSeatByNumber(String seatNumber, Long showId) {
         try {
             MovieShow movieShow = getShowOrThrow(showId);
+            markAvailableAfterCompletion(movieShow);
             Seat seat = movieShow.getSeatByNumber(seatNumber);
             if (seat == null) {
                 throw new ResourceNotFoundException("Seat number " + seatNumber + " not found in show " + showId);
@@ -56,7 +62,9 @@ public class ShowService {
      */
     public List<Seat> getAllSeats(Long showId) {
         try {
+
             MovieShow movieShow = getShowOrThrow(showId);
+            markAvailableAfterCompletion(movieShow);
             return movieShow.getSeats();
         } catch (Exception e) {
             LOGGER.error("Failed to fetch seats for show {}", showId, e);
@@ -70,5 +78,21 @@ public class ShowService {
     private MovieShow getShowOrThrow(Long showId) {
         return showRepository.findById(showId)
                 .orElseThrow(() -> new ResourceNotFoundException("Show not found for ID: " + showId));
+    }
+
+    @Transactional
+    private void  markAvailableAfterCompletion(MovieShow movieShow){
+        try {
+            List<Seat> seats = movieShow.getSeats();
+            if(LocalDateTime.now().isAfter(movieShow.getEndTime())){
+                for(var seat:seats){
+                    seat.setStatus(SeatStatus.AVAILABLE);
+                }
+            }
+            seatRepository.saveAll(seats);
+        } catch (Exception e) {
+            LOGGER.error("Failed to update the seat status:{}",movieShow.getId(), e);
+            throw e;
+        }
     }
 }
