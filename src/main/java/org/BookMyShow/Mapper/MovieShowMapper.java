@@ -25,7 +25,10 @@ public class MovieShowMapper {
         return new MovieShowResponseDTO(
                 movieShow.getId(),
                 movieShow.getMovie().getTitle(),
-                movieShow.getTheater().getTheaterName()
+                movieShow.getTheater().getTheaterName(),
+                movieShow.getSeats(),
+                movieShow.getStartTime(),
+                movieShow.getEndTime()
 
         );
     }
