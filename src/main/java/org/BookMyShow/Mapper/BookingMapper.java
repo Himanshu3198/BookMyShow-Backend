@@ -20,6 +20,7 @@ public class BookingMapper {
                 booking.getUser().getId(),
                 MovieShowMapper.toDTO(booking.getShow()),
                 booking.getAmount(),
+                booking.getSeatNumber(),
                 booking.getBookingStatus(),
                 booking.getpaymentType(),
                 booking.getBookingTime()

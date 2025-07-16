@@ -13,6 +13,7 @@ public record BookingResponseDTO (
         @JsonProperty("userId") Long userId,
         @JsonProperty("movieShow") MovieShowResponseDTO movieShow,
         @JsonProperty("amount") Double amount,
+        @JsonProperty("seatNumber") String seatNumber,
         @JsonProperty("bookingStatus") BookingStatus bookingStatus,
         @JsonProperty("paymentType") PaymentType paymentType,
         @JsonProperty("bookingTime") LocalDateTime bookingTime
