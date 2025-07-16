@@ -45,6 +45,8 @@ public class TheaterService {
     private MovieShow buildMovieShow(MovieShowDTO showDTO) {
         MovieShow movieShow = new MovieShow();
         movieShow.setShowTime(showDTO.showTime());
+        movieShow.setStartTime(showDTO.startTime());
+        movieShow.setEndTime(showDTO.endTime());
 
         Movie movie = movieService.getMovieById(showDTO.movieId());
         movieShow.setMovie(movie);

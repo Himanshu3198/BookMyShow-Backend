@@ -95,4 +95,15 @@ public class ShowService {
             throw e;
         }
     }
+
+    public List<MovieShow> getAllShow() {
+        try {
+            return showRepository.findAll();
+        } catch (Exception e) {
+            LOGGER.error("Failed to fetch all shows", e);
+            throw e;
+        }
+    }
+
+
 }

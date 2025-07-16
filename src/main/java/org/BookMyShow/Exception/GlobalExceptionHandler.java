@@ -34,10 +34,16 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<String> handleGeneric(Exception ex){
+  public ResponseEntity<ErrorResponse> handleGeneric(Exception ex){
     ErrorResponse response = new ErrorResponse("SERVER ERROR","SOMETHING WHET WRONG",ex.getMessage());
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong"+ex.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+  }
+
+  @ExceptionHandler(ShowNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleShowNotFound(ShowNotFoundException ex){
+    ErrorResponse response = new ErrorResponse("SHOW_NOT_FOUND","Show is not available ", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 
 }
