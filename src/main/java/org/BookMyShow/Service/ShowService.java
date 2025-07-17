@@ -1,9 +1,7 @@
 package org.BookMyShow.Service;
 
-import jakarta.transaction.Transactional;
 import org.BookMyShow.Entity.MovieShow;
 import org.BookMyShow.Entity.Seat;
-import org.BookMyShow.Enum.SeatStatus;
 import org.BookMyShow.Exception.ResourceNotFoundException;
 import org.BookMyShow.Repository.SeatRepository;
 import org.BookMyShow.Repository.ShowRepository;
@@ -11,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,7 +42,6 @@ public class ShowService {
     public Seat getSeatByNumber(String seatNumber, Long showId) {
         try {
             MovieShow movieShow = getShowOrThrow(showId);
-            markAvailableAfterCompletion(movieShow);
             Seat seat = movieShow.getSeatByNumber(seatNumber);
             if (seat == null) {
                 throw new ResourceNotFoundException("Seat number " + seatNumber + " not found in show " + showId);
@@ -62,9 +58,7 @@ public class ShowService {
      */
     public List<Seat> getAllSeats(Long showId) {
         try {
-
             MovieShow movieShow = getShowOrThrow(showId);
-            markAvailableAfterCompletion(movieShow);
             return movieShow.getSeats();
         } catch (Exception e) {
             LOGGER.error("Failed to fetch seats for show {}", showId, e);
@@ -80,22 +74,9 @@ public class ShowService {
                 .orElseThrow(() -> new ResourceNotFoundException("Show not found for ID: " + showId));
     }
 
-    @Transactional
-    private void  markAvailableAfterCompletion(MovieShow movieShow){
-        try {
-            List<Seat> seats = movieShow.getSeats();
-            if(LocalDateTime.now().isAfter(movieShow.getEndTime())){
-                for(var seat:seats){
-                    seat.setStatus(SeatStatus.AVAILABLE);
-                }
-            }
-            seatRepository.saveAll(seats);
-        } catch (Exception e) {
-            LOGGER.error("Failed to update the seat status:{}",movieShow.getId(), e);
-            throw e;
-        }
-    }
-
+    /**
+     * Get all shows
+     */
     public List<MovieShow> getAllShow() {
         try {
             return showRepository.findAll();
@@ -104,6 +85,4 @@ public class ShowService {
             throw e;
         }
     }
-
-
 }
