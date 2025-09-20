@@ -122,3 +122,4 @@ The system should handle **theater management, show scheduling, seat booking, pa
 - **Cost vs Performance** → scaling across regions improves latency but increases infra costs.
 
 ---
+![Class Diagram](./bookmyshow.drawio.png)
